@@ -33,8 +33,8 @@ export default {
     return {
       // 登录表单数据绑定对象
       loginForm: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 表单校验规则对象
       loginFormRules: {
@@ -67,6 +67,9 @@ export default {
         }
         // console.log('登录成功')
         this.$message.success('登录成功!')
+        // 登录成功之后, 将token保存到sessionStore中, 并调整到/home页
+        window.sessionStorage.setItem('token', res.data.token)
+        this.$router.push('/home')
       })
     }
   }
