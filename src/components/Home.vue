@@ -1,7 +1,18 @@
 <template>
-  <div>
-    <el-button type="info" @click="logout">退出登录</el-button>
-  </div>
+  <el-container class="home-container">
+    <!-- 头部区域 -->
+    <el-header>
+      <span>Header</span>
+      <el-button type="info" @click="logout">退出登录</el-button>
+    </el-header>
+    <!-- 主体区域 -->
+    <el-container>
+      <!-- 侧边栏 -->
+      <el-aside width="200px">Aside</el-aside>
+      <!-- 右边内容区域 -->
+      <el-main>Main</el-main>
+    </el-container>
+  </el-container>
 </template>
 <script>
 export default {
@@ -15,4 +26,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.home-container {
+  height: 100%;
+}
+.el-header {
+  background-color: #373d41;
+}
+.el-aside {
+  background-color: #333744;
+}
+.el-main {
+  background-color: #eaedf1;
+}
 </style>
