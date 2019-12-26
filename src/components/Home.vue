@@ -11,8 +11,10 @@
     <!-- 主体区域 -->
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside width="200px">
-        <el-menu background-color="#333744" text-color="#fff" active-text-color="#409eff">
+      <el-aside :width="isCollapsed ? '64px' : '200px'">
+        <div class='toggle-button' @click='toggleCollapse'>|||</div>
+        <el-menu background-color="#333744" text-color="#fff"
+          active-text-color="#409eff" unique-opened :collapse='isCollapsed' :collapse-transition='false'>
           <!--一级菜单 -->
           <el-submenu :index="item.id + ''" v-for="item in menuList" :key="item.id">
             <template slot="title">
@@ -45,7 +47,8 @@ export default {
         '101': 'iconfont icon-shangpin',
         '102': 'iconfont icon-danju',
         '145': 'iconfont icon-baobiao'
-      }
+      },
+      isCollapsed: false
     }
   },
   created() {
@@ -63,6 +66,9 @@ export default {
       console.log(res)
       if (res.meta.status !== 200) return this.$message.error(res.meta.message)
       this.menuList = res.data
+    },
+    toggleCollapse() {
+      this.isCollapsed = !this.isCollapsed
     }
   }
 }
@@ -96,5 +102,18 @@ export default {
 
 .iconfont {
   margin-right: 8px;
+}
+.el-menu {
+  border-right: none;
+}
+
+.toggle-button {
+  background-color: #4a506f;
+  font-size: 10px;
+  line-height: 24px;
+  color: #fff;
+  text-align: center;
+  letter-spacing: .2em;
+  cursor: pointer;
 }
 </style>
