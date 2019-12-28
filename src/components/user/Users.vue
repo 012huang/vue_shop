@@ -21,7 +21,7 @@
       </el-row>
 
       <!-- 用户表格区域 -->
-      <el-table :data='userList' border stripe>
+      <el-table :data="userList" border stripe>
         <el-table-column label="#" type="index"></el-table-column>
         <el-table-column label="姓名" prop="username"></el-table-column>
         <el-table-column label="邮箱" prop="email"></el-table-column>
@@ -29,11 +29,23 @@
         <el-table-column label="角色" prop="role_name"></el-table-column>
         <el-table-column label="状态">
           <template slot-scope="scope">
+            <!-- 通过作用于插槽, 可以通过scope.row获取当前行的数据 -->
             <!-- debug {{scope.row}} -->
             <el-switch v-model="scope.row.mg_state"></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作"></el-table-column>
+        <el-table-column label="操作" width="180px">
+          <template slot-scope="scope">
+            <!-- 编辑按钮 -->
+            <el-button type="primary" icon="el-icon-edit" size="mini" :id="scope.row.id"></el-button>
+            <!-- 删除按钮 -->
+            <el-button type="danger" icon="el-icon-delete" size="mini" :id="scope.row.id"></el-button>
+            <!-- 分配角色按钮 -->
+            <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
+              <el-button type="warning" icon="el-icon-setting" size="mini" :id="scope.row.id"></el-button>
+            </el-tooltip>
+          </template>
+        </el-table-column>
       </el-table>
     </el-card>
   </div>
@@ -57,19 +69,22 @@ export default {
   },
   methods: {
     async getUserList() {
-      const { data: res } = await this.$http.get('users', { params: this.queryInfo })
+      const { data: res } = await this.$http.get('users', {
+        params: this.queryInfo
+      })
       console.log(res)
-      if (res.meta.status !== 200) return this.$message.error('获取用户列表失败!')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取用户列表失败!')
+      }
       this.userList = res.data.users
       this.total = res.data.total
     }
-
   }
 }
 </script>
 <style lang="less" scoped>
-  .el-table {
-    margin-top: 20px;
-    font-size: 12px;
-  }
+.el-table {
+  margin-top: 20px;
+  font-size: 12px;
+}
 </style>
