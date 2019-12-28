@@ -11,8 +11,8 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" class="input-with-select" v-model="queryInfo.query" clearable @clear="getUserList">
+            <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
