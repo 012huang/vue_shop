@@ -67,8 +67,17 @@
     </el-card>
 
     <!-- 添加用户的对话框 -->
-    <el-dialog title="提示" :visible.sync="addUserDialogVisible" width="50%">
-      <span>这是一段信息</span>
+    <el-dialog title="添加用户" :visible.sync="addUserDialogVisible" width="50%">
+      <el-form
+        :model="addUserForm"
+        :rules="addUserFormRules"
+        ref="addUserFormRulesRef"
+        label-width="70px"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="addUserForm.username"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUserDialogVisible = false">确 定</el-button>
@@ -88,7 +97,16 @@ export default {
       },
       userList: [],
       total: 0,
-      addUserDialogVisible: false
+      addUserDialogVisible: false,
+      addUserForm: {
+        username: ''
+      },
+      addUserFormRules: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在3~10个字符之间', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
