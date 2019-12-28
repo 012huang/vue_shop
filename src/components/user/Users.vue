@@ -43,7 +43,7 @@
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!-- 编辑按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini" :id="scope.row.id"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" :id="scope.row.id" @click="showEditUserDialog"></el-button>
             <!-- 删除按钮 -->
             <el-button type="danger" icon="el-icon-delete" size="mini" :id="scope.row.id"></el-button>
             <!-- 分配角色按钮 -->
@@ -90,6 +90,15 @@
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <!-- 编辑用户的对话框 -->
+    <el-dialog title="编辑用户" :visible.sync="editUserDialogVisible" width="50%">
+      <span>编辑用户对话框</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editUserDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editUserDialogVisible = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -154,7 +163,8 @@ export default {
           { required: true, message: '请输入手机', trigger: 'blur' },
           { validator: checkMobile, trigger: 'blur' }
         ]
-      }
+      },
+      editUserDialogVisible: false
     }
   },
   created() {
@@ -221,6 +231,9 @@ export default {
         // 并且从后台重新加载数据
         this.getUserList()
       })
+    },
+    showEditUserDialog() {
+      this.editUserDialogVisible = true
     }
   }
 }
