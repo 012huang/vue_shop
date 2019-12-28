@@ -89,7 +89,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUserDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -200,6 +200,13 @@ export default {
     addUserDialogClosed() {
       console.log('dialog closed')
       this.$refs.addUserFormRef.resetFields()
+    },
+    // 表单提交时进行预校验, 并提交
+    addUser() {
+      this.$refs.addUserFormRef.validate(valided => {
+        if (!valided) return
+        // 效验通过, 则提交数据到后台
+      })
     }
   }
 }
