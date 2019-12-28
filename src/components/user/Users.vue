@@ -95,7 +95,22 @@
 
     <!-- 编辑用户的对话框 -->
     <el-dialog title="编辑用户" :visible.sync="editUserDialogVisible" width="50%">
-      <span>编辑用户对话框</span>
+      <el-form
+        :model="editUserDialogForm"
+        :rules="editUserDialogFormRules"
+        ref="editUserDialogFormRef"
+        label-width="70px"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editUserDialogForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editUserDialogForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="editUserDialogForm.mobile"></el-input>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editUserDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserDialogVisible = false">确 定</el-button>
@@ -165,7 +180,17 @@ export default {
         ]
       },
       editUserDialogVisible: false,
-      editUserDialogForm: {}
+      editUserDialogForm: {},
+      editUserDialogFormRules: {
+        email: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
