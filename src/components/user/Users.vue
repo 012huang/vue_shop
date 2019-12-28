@@ -11,12 +11,18 @@
     <el-card>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-input placeholder="请输入内容" class="input-with-select" v-model="queryInfo.query" clearable @clear="getUserList">
+          <el-input
+            placeholder="请输入内容"
+            class="input-with-select"
+            v-model="queryInfo.query"
+            clearable
+            @clear="getUserList"
+          >
             <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addUserDialogVisible = true">添加用户</el-button>
         </el-col>
       </el-row>
 
@@ -59,6 +65,15 @@
         :total="total"
       ></el-pagination>
     </el-card>
+
+    <!-- 添加用户的对话框 -->
+    <el-dialog title="提示" :visible.sync="addUserDialogVisible" width="50%">
+      <span>这是一段信息</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addUserDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addUserDialogVisible = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -72,7 +87,8 @@ export default {
         pagesize: 2
       },
       userList: [],
-      total: 0
+      total: 0,
+      addUserDialogVisible: false
     }
   },
   created() {
@@ -105,7 +121,9 @@ export default {
     // 监听switch开关状态的变化
     async userStateChange(userInfo) {
       console.log(userInfo)
-      const { data: res } = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+      const { data: res } = await this.$http.put(
+        `users/${userInfo.id}/state/${userInfo.mg_state}`
+      )
       if (res.meta.status !== 200) {
         userInfo.mg_state = !userInfo.mg_state
         return this.$message.error('更新用户状态信息失败!')
