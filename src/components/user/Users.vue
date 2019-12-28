@@ -43,12 +43,12 @@
         <el-table-column label="操作" width="180px">
           <template slot-scope="scope">
             <!-- 编辑按钮 -->
-            <el-button type="primary" icon="el-icon-edit" size="mini" :id="scope.row.id" @click="showEditUserDialog"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditUserDialog(scope.row.id)"></el-button>
             <!-- 删除按钮 -->
-            <el-button type="danger" icon="el-icon-delete" size="mini" :id="scope.row.id"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <!-- 分配角色按钮 -->
             <el-tooltip effect="dark" content="分配角色" placement="top-end" :enterable="false">
-              <el-button type="warning" icon="el-icon-setting" size="mini" :id="scope.row.id"></el-button>
+              <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -164,7 +164,8 @@ export default {
           { validator: checkMobile, trigger: 'blur' }
         ]
       },
-      editUserDialogVisible: false
+      editUserDialogVisible: false,
+      editUserDialogForm: {}
     }
   },
   created() {
@@ -232,7 +233,14 @@ export default {
         this.getUserList()
       })
     },
-    showEditUserDialog() {
+    async showEditUserDialog(id) {
+      console.log(id)
+      const { data: res } = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) {
+        return this.$message.error('查询用户信息失败')
+      }
+      console.log(res.data)
+      this.editUserDialogForm = res.data
       this.editUserDialogVisible = true
     }
   }
