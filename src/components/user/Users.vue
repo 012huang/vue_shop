@@ -77,6 +77,15 @@
         <el-form-item label="用户名" prop="username">
           <el-input v-model="addUserForm.username"></el-input>
         </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="addUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addUserForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="addUserForm.mobile"></el-input>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="addUserDialogVisible = false">取 消</el-button>
@@ -88,6 +97,30 @@
 <script>
 export default {
   data() {
+    // 邮箱自定义效验规则
+    var checkEmail = (rule, value, cb) => {
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+
+      if (regEmail.test(value)) {
+        // 合法的邮箱
+        return cb()
+      }
+
+      return cb(new Error('请输入合法的邮箱'))
+    }
+
+    // 邮箱自定义效验规则
+    var checkMobile = (rule, value, cb) => {
+      const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+
+      if (regMobile.test(value)) {
+        // 合法的邮箱
+        return cb()
+      }
+
+      return cb(new Error('请输入合法的手机号'))
+    }
+
     return {
       // 获取用户列表的查询参数对象
       queryInfo: {
@@ -99,12 +132,27 @@ export default {
       total: 0,
       addUserDialogVisible: false,
       addUserForm: {
-        username: ''
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
       },
       addUserFormRules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 3, max: 10, message: '长度在3~10个字符之间', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 15, message: '长度在6~15个字符之间', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' },
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入手机', trigger: 'blur' },
+          { validator: checkMobile, trigger: 'blur' }
         ]
       }
     }
