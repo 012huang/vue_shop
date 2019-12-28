@@ -203,9 +203,23 @@ export default {
     },
     // 表单提交时进行预校验, 并提交
     addUser() {
-      this.$refs.addUserFormRef.validate(valided => {
-        if (!valided) return
+      console.log('debug: --------------')
+      this.$refs.addUserFormRef.validate(async valid => {
+        console.log(valid)
+        if (!valid) return
+        
         // 效验通过, 则提交数据到后台
+        const { data: res } = await this.$http.post('users', this.addUserForm)
+        if (res.meta.status !== 201) {
+          this.$message.error('添加用户失败')
+        }
+
+        this.$message.success('添加用户成功')
+        // 添加成功之后, 隐藏对话框
+        this.addUserDialogVisible = false
+
+        // 并且从后台重新加载数据
+        this.getUserList()
       })
     }
   }
