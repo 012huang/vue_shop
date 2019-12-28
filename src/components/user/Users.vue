@@ -31,7 +31,7 @@
           <template slot-scope="scope">
             <!-- 通过作用于插槽, 可以通过scope.row获取当前行的数据 -->
             <!-- debug {{scope.row}} -->
-            <el-switch v-model="scope.row.mg_state"></el-switch>
+            <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
@@ -101,6 +101,16 @@ export default {
       console.log(newPageNum)
       this.queryInfo.pagenum = newPageNum
       this.getUserList()
+    },
+    // 监听switch开关状态的变化
+    async userStateChange(userInfo) {
+      console.log(userInfo)
+      const { data: res } = await this.$http.put(`users/${userInfo.id}/state/${userInfo.mg_state}`)
+      if (res.meta.status !== 200) {
+        userInfo.mg_state = !userInfo.mg_state
+        return this.$message.error('更新用户状态信息失败!')
+      }
+      this.$message.success('更新用户状态信息成功!')
     }
   }
 }
