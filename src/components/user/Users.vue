@@ -67,11 +67,11 @@
     </el-card>
 
     <!-- 添加用户的对话框 -->
-    <el-dialog title="添加用户" :visible.sync="addUserDialogVisible" width="50%">
+    <el-dialog title="添加用户" :visible.sync="addUserDialogVisible" width="50%" @close="addUserDialogClosed">
       <el-form
         :model="addUserForm"
         :rules="addUserFormRules"
-        ref="addUserFormRulesRef"
+        ref="addUserFormRef"
         label-width="70px"
       >
         <el-form-item label="用户名" prop="username">
@@ -195,6 +195,11 @@ export default {
         return this.$message.error('更新用户状态信息失败!')
       }
       this.$message.success('更新用户状态信息成功!')
+    },
+    // addUserDialog对话框关闭时, 对表字段进行重置
+    addUserDialogClosed() {
+      console.log('dialog closed')
+      this.$refs.addUserFormRef.resetFields()
     }
   }
 }
