@@ -12,7 +12,27 @@
   </div>
 </template>
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      rightsList: []
+    }
+  },
+  created() {
+    this.getRightsList()
+  },
+  methods: {
+    async getRightsList() {
+      const { data: res } = await this.$http.get('/rights/list')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取权限列表失败')
+      }
+      console.log(res.data)
+      this.$message.success('获取权限列表成功')
+      this.rightsList = res.data
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
 </style>
