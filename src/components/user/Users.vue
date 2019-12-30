@@ -94,7 +94,7 @@
     </el-dialog>
 
     <!-- 编辑用户的对话框 -->
-    <el-dialog title="编辑用户" :visible.sync="editUserDialogVisible" width="50%">
+    <el-dialog title="编辑用户" :visible.sync="editUserDialogVisible" width="50%" @close="editUserDialogClose">
       <el-form
         :model="editUserDialogForm"
         :rules="editUserDialogFormRules"
@@ -113,7 +113,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editUserDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUserDialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="editUserInfo">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -267,6 +267,30 @@ export default {
       console.log(res.data)
       this.editUserDialogForm = res.data
       this.editUserDialogVisible = true
+    },
+    editUserDialogClose() {
+      this.$refs.editUserDialogFormRef.resetFields()
+    },
+    editUserInfo() {
+      this.$refs.editUserDialogFormRef.validate(async valid => {
+        console.log(valid)
+        if (!valid) return
+        // 校验通过, 则发起http请求提交修改后的数据到后台
+        const { data: res } = await this.$http.put('users/' + this.editUserDialogForm.id, {
+          email: this.editUserDialogForm.email,
+          mobile: this.editUserDialogForm.mobile
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('更新用户信息失败')
+        }
+        // 提交修改信息成功, 则
+        // 关闭对话框
+        this.editUserDialogVisible = false
+        // 刷新数据
+        this.getUserList()
+        // 显示修改成功信息
+        this.$message.success('更新用户信息成功')
+      })
     }
   }
 }
