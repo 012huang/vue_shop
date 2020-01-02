@@ -11,18 +11,30 @@
     <el-card>
       <!-- 添加角色按钮区域 -->
       <el-row>
-        <el-column>
+        <el-col>
           <el-button type="primary">添加权限</el-button>
-        </el-column>
+        </el-col>
       </el-row>
 
       <!-- 角色列表区域 -->
       <el-table :data="roleList" border stripe>
         <el-table-column type="expand">
           <template slot-scope="scope">
+            <!-- 每一行分成了24份 -->
+            <el-row v-for="item1 in scope.row.children" :key="item1.id">
+              <!-- 渲染一级权限, 占用5格 -->
+              <el-col :span="5">
+                <el-tag>{{item1.authName}}</el-tag>
+              </el-col>
+              <!-- 渲染二级和三级权限, 占用19格 -->
+              <el-col :span="19"></el-col>
+            </el-row>
+
+            <!-- 调试用的 
             <pre>
               {{scope.row}}
             </pre>
+            -->
           </template>
         </el-table-column>
         <el-table-column type="index" label="#"></el-table-column>
