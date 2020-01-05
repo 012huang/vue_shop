@@ -28,7 +28,15 @@
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!-- 渲染二级和三级权限, 占用19格 -->
-              <el-col :span="19"></el-col>
+              <el-col :span="19">
+                <!-- 二级权限 -->
+                <el-row :class="item2.id === 0 ? '' : 'bdtop'" v-for="item2 in item1.children" :key="item2.id">
+                  <el-tag type="success">{{item2.authName}}</el-tag>
+                  <i class="el-icon-caret-right"></i>
+                </el-row>
+                <!-- 三级权限 -->
+                <el-row></el-row>
+              </el-col>
             </el-row>
 
             <!-- 调试用的 
