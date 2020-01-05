@@ -29,13 +29,19 @@
               </el-col>
               <!-- 渲染二级和三级权限, 占用19格 -->
               <el-col :span="19">
-                <!-- 二级权限 -->
                 <el-row :class="item2.id === 0 ? '' : 'bdtop'" v-for="item2 in item1.children" :key="item2.id">
-                  <el-tag type="success">{{item2.authName}}</el-tag>
-                  <i class="el-icon-caret-right"></i>
+                  <!-- 二级权限 -->
+                  <el-col :span="6">
+                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <i class="el-icon-caret-right"></i>
+                  </el-col>
+
+                  <!-- 三级权限 -->
+                  <el-col :span="18">
+                        <el-tag type="warning" v-for="item3 in item2.children" :key="item3.id">{{item3.authName}}</el-tag>
+                  </el-col>
+                  
                 </el-row>
-                <!-- 三级权限 -->
-                <el-row></el-row>
               </el-col>
             </el-row>
 
