@@ -38,7 +38,7 @@
 
                   <!-- 三级权限 -->
                   <el-col :span="18">
-                        <el-tag type="warning" v-for="item3 in item2.children" :key="item3.id">{{item3.authName}}</el-tag>
+                        <el-tag closable type="warning" v-for="item3 in item2.children" :key="item3.id" @close="removeRightsById()">{{item3.authName}}</el-tag>
                   </el-col>
                   
                 </el-row>
@@ -84,6 +84,19 @@ export default {
       }
       this.roleList = res.data
       console.log(this.roleList)
+    },
+    async removeRightsById() {
+      // 弹框提示用户是否删除
+      const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).catch(err => err)
+      
+      if (confirmResult !== 'confirm') {
+        return this.$message.info('取消了删除权限')
+      }
+      console.log('删除了权限')
     }
   }
 }
