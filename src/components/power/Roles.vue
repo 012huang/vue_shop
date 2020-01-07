@@ -38,7 +38,7 @@
 
                   <!-- 三级权限 -->
                   <el-col :span="18">
-                        <el-tag closable type="warning" v-for="item3 in item2.children" :key="item3.id" @close="removeRightsById()">{{item3.authName}}</el-tag>
+                        <el-tag closable type="warning" v-for="item3 in item2.children" :key="item3.id" @close="removeRightsById(scope.row, item3.id)">{{item3.authName}}</el-tag>
                   </el-col>
                   
                 </el-row>
@@ -85,7 +85,7 @@ export default {
       this.roleList = res.data
       console.log(this.roleList)
     },
-    async removeRightsById() {
+    async removeRightsById(role, rightsId) {
       // 弹框提示用户是否删除
       const confirmResult = await this.$confirm('此操作将永久删除该权限, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -96,7 +96,18 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('取消了删除权限')
       }
-      console.log('删除了权限')
+      // console.log('删除了权限')
+      // 删除对应的角色权限
+      const { data: res } = await this.$http.delete(`roles/${role.id}/rights/${rightsId}`)
+      console.log(res)
+
+      if (res.meta.status !== 200) {
+        return this.$message.error('删除权限失败')
+      }
+
+      // 不要调用 this.getRoleList(),会导致整个权限数据的刷新, 用户体验不好
+      // 只更新权限数据即可
+      role.children = res.data
     }
   }
 }
