@@ -24,7 +24,7 @@
             <el-row :class="['bdbottom', 'vcenter', item1.id === 0 ? 'bdtop' : '']" v-for="item1 in scope.row.children" :key="item1.id">
               <!-- 渲染一级权限, 占用5格 -->
               <el-col :span="5">
-                <el-tag>{{item1.authName}}</el-tag>
+                <el-tag closable @close="removeRightsById(scope.row, item1.id)">{{item1.authName}}</el-tag>
                 <i class="el-icon-caret-right"></i>
               </el-col>
               <!-- 渲染二级和三级权限, 占用19格 -->
@@ -32,7 +32,7 @@
                 <el-row :class="['vcenter', item2.id === 0 ? '' : 'bdtop']" v-for="item2 in item1.children" :key="item2.id">
                   <!-- 二级权限 -->
                   <el-col :span="6">
-                    <el-tag type="success">{{item2.authName}}</el-tag>
+                    <el-tag closable @close="removeRightsById(scope.row, item2.id)" type="success">{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
 
