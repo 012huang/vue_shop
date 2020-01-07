@@ -71,7 +71,7 @@
   :visible.sync="setRightDialogVisible"
   width="50%"
   :before-close="handleClose">
-  <span>这是一段信息</span>
+  <el-tree :data="rightList" :props="treeProps"></el-tree>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -87,7 +87,11 @@ export default {
       // 控制设置权限对话框的显示
       setRightDialogVisible: false,
       // 所有权限数据
-      rightList: []
+      rightList: [],
+      treeProps: {
+        label: 'authName',
+        children: 'children'
+      }
     }
   },
   created() {
