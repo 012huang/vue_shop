@@ -9,7 +9,7 @@
 
     <!-- 卡片区域 -->
     <el-card>
-      <!-- 添加角色按钮区域 -->
+      <!-- 添加权限按钮区域 -->
       <el-row>
         <el-col>
           <el-button type="primary">添加权限</el-button>
@@ -59,18 +59,35 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting">分配权限</el-button>
+            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog()">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+
+    <!-- 分配角色对话框 -->
+    <el-dialog
+  title="分配权限"
+  :visible.sync="setRightDialogVisible"
+  width="50%"
+  :before-close="handleClose">
+  <span>这是一段信息</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      roleList: []
+      roleList: [],
+      // 控制设置权限对话框的显示
+      setRightDialogVisible: false,
+      // 所有权限数据
+      rightList: []
     }
   },
   created() {
@@ -108,6 +125,16 @@ export default {
       // 不要调用 this.getRoleList(),会导致整个权限数据的刷新, 用户体验不好
       // 只更新权限数据即可
       role.children = res.data
+    },
+    async showSetRightDialog() {
+      // 获取所有权限数据
+      const {data: res} = await this.$http.get('rights/tree')
+      if (res.meta.status !== 200) {
+        return this.$mesage.error('获取权限数据失败')
+      }
+      console.log(res.data)
+      this.rightList = res.data
+      this.setRightDialogVisible = true
     }
   }
 }
