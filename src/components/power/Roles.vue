@@ -59,7 +59,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" icon="el-icon-edit">编辑</el-button>
             <el-button size="mini" type="danger" icon="el-icon-delete">删除</el-button>
-            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog()">分配权限</el-button>
+            <el-button size="mini" type="warning" icon="el-icon-setting" @click="showSetRightDialog(scope.row)">分配权限</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -94,7 +94,7 @@ export default {
         children: 'children'
       },
       // 默认选中的权限id列表
-      defKeys: [105, 116]
+      defKeys: []
     }
   },
   created() {
@@ -133,7 +133,7 @@ export default {
       // 只更新权限数据即可
       role.children = res.data
     },
-    async showSetRightDialog() {
+    async showSetRightDialog(role) {
       // 获取所有权限数据
       const {data: res} = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) {
@@ -141,7 +141,22 @@ export default {
       }
       console.log(res.data)
       this.rightList = res.data
+      // 在对话框显示之前, 获取默认的权限
+      this.getDefKeys(role, this.defKeys)
       this.setRightDialogVisible = true
+    },
+    getDefKeys(node, arr) {
+      // 获取三级权限中的权限
+      
+      // 不包含children属性的即为三级权限
+      if (!node.children) {
+        return arr.push(node.id)
+      }
+
+      // 不是三级权限, 则递归调用
+      node.children.forEach(item => {
+        this.getDefKeys(item, arr)
+      })
     }
   }
 }
