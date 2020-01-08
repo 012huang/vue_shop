@@ -70,7 +70,7 @@
   title="分配权限"
   :visible.sync="setRightDialogVisible"
   width="50%"
-  :before-close="handleClose">
+  :before-close="handleClose" @close="setRightDialogClosed">
   <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys"></el-tree>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -157,6 +157,9 @@ export default {
       node.children.forEach(item => {
         this.getDefKeys(item, arr)
       })
+    },
+    setRightDialogClosed() {
+      this.defKeys = []
     }
   }
 }
