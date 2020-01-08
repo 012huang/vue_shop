@@ -67,16 +67,16 @@
 
     <!-- 分配角色对话框 -->
     <el-dialog
-  title="分配权限"
-  :visible.sync="setRightDialogVisible"
-  width="50%"
-  :before-close="handleClose" @close="setRightDialogClosed">
-  <el-tree :data="rightList" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys"></el-tree>
-  <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-  </span>
-</el-dialog>
+      title="分配权限"
+      :visible.sync="setRightDialogVisible"
+      width="50%"
+      :before-close="handleClose" @close="setRightDialogClosed">
+      <el-tree :data="rightList" ref="treeRef" :props="treeProps" show-checkbox node-key="id" default-expand-all :default-checked-keys="defKeys"></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRightDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="allotRights">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -94,7 +94,9 @@ export default {
         children: 'children'
       },
       // 默认选中的权限id列表
-      defKeys: []
+      defKeys: [],
+      // 显示分配权限对话框时当前的roleId
+      roleId: ''
     }
   },
   created() {
@@ -134,6 +136,7 @@ export default {
       role.children = res.data
     },
     async showSetRightDialog(role) {
+      this.roleId = role.id
       // 获取所有权限数据
       const {data: res} = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) {
@@ -160,6 +163,25 @@ export default {
     },
     setRightDialogClosed() {
       this.defKeys = []
+    },
+    async allotRights() {
+      // 实现权限分配逻辑
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      const idStr = keys.join(',')
+      console.log(idStr)
+      const {data: res} = await this.$http.post(`roles/${this.roleId}/rights`, {
+        rids: idStr
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('分配权限失败')
+      }
+      this.$message.success('分配权限成功')
+      // 刷新权限列表并关闭对话框
+      this.getRoleList()
+      this.setRightDialogVisible = false
     }
   }
 }
